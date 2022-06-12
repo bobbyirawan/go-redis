@@ -6,23 +6,17 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
+	rds "test-queue/redis"
 	"time"
 
-	"github.com/go-redis/redis/v7"
 	_ "github.com/go-sql-driver/mysql"
 )
 
 func main() {
 
-	redisClient := redis.NewClient(&redis.Options{
-		Addr:     "localhost:6379",
-		Password: "",
-		DB:       0,
-	})
-
 	go func() {
 		for {
-			result, err := redisClient.BLPop(0*time.Second, "payments").Result()
+			result, err := rds.RedisClient.BLPop(0*time.Second, "payments").Result()
 			if err != nil {
 				fmt.Println(err.Error())
 			} else {
